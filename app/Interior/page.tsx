@@ -33,12 +33,12 @@ export default function InteriorPage() {
       <div className="w-full lg:w-[70%] relative h-[50vh] lg:h-screen">
         {/* Navbar overlaid on image */}
         <nav className="absolute top-0 left-0 w-full flex items-center px-4 sm:px-6 py-3 sm:py-4 z-10">
-          <Link href="/" className="flex items-center text-2xl sm:text-3xl lg:text-[50px] font-semibold text-white hover:text-gray-200 transition-colors drop-shadow-lg">
+          <Link href="/" className="flex items-center text-2xl sm:text-3xl lg:text-[35px] font-semibold text-white hover:text-gray-200 transition-colors drop-shadow-lg">
             ← Interior
           </Link>
         </nav>
 
-        {/* Image with transition */}
+    
         <Image
           key={currentIndex}
           src={INTERIOR_IMAGES[currentIndex]}
@@ -49,7 +49,7 @@ export default function InteriorPage() {
         />
       </div>
 
-      {/* Right (Text and Navigator) */}
+ 
       <div className="w-full lg:w-[30%] min-h-[50vh] lg:h-screen flex flex-col justify-center px-6 sm:px-8 lg:px-10 py-8 lg:py-0 bg-white">
         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
           Welcome in Cockpit
