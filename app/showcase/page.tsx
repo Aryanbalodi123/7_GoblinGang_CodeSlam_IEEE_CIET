@@ -1,7 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+<<<<<<< HEAD
 import Image from "next/image";
+=======
+import { useRouter } from "next/navigation";
+>>>>>>> db2fc1aadf5bef91e227f89fcbab9513faab5e18
 import { motion, AnimatePresence } from "framer-motion";
 
 // Motion-wrapped Next Image for animated images
@@ -39,6 +43,7 @@ const WHEEL_ONE = wheelData.find(w => w.id === 1) as WheelType;
 
 // --- Component ---
 export default function ConfiguratorPage() {
+  const router = useRouter();
   // --- State ---
   const [currentColor, setCurrentColor] = useState<ColorType>(COLOR_NINE);
   const [currentWheel, setCurrentWheel] = useState<WheelType>(WHEEL_ONE);
@@ -89,6 +94,7 @@ export default function ConfiguratorPage() {
           <motion.button 
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => router.push('/')}
             className="text-gray-500 hover:text-gray-900 transition-colors duration-200"
           >
             <ArrowLeft size={20} />
