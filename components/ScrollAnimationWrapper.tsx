@@ -46,18 +46,7 @@ export const ScrollAnimationWrapper = ({
     },
   };
 
-  const itemVariants = {
-    hidden: getInitialVariant(),
-    visible: {
-      opacity: 1,
-      x: 0,
-      y: 0,
-      transition: {
-        duration,
-        ease: 'easeOut',
-      },
-    },
-  };
+  // itemVariants removed: we apply initial/animate directly where needed
 
   return (
     <motion.div

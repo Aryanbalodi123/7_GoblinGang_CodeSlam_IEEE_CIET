@@ -1,10 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const useScrollAnimation = (options = {}) => {
+export const useScrollAnimation = (options: IntersectionObserverInit = {}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
 
   useEffect(() => {
+    const node = ref.current;
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -19,16 +21,16 @@ export const useScrollAnimation = (options = {}) => {
       }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    if (node) {
+      observer.observe(node);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (node) {
+        observer.unobserve(node);
       }
     };
-  }, []);
+  }, [options]);
 
   return { ref, isInView };
 };

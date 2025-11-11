@@ -20,6 +20,14 @@ export const ParallaxScroll = ({
     offset: ['start end', 'end start'],
   });
 
+  // Call hooks unconditionally to preserve hook order
+  const yUp = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
+  const yDown = useTransform(scrollYProgress, [0, 1], [-offset, offset]);
+  const scaleTransform = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 1]);
+  const rotateTransform = useTransform(scrollYProgress, [0, 0.5, 1], [20, 10, 0]);
+  const opacityUpDown = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]);
+  const opacityScaleRotate = useTransform(scrollYProgress, [0, 0.3, 1], [0, 0.5, 1]);
+
   let y: MotionValue<number> | number = 0;
   let opacity: MotionValue<number> | number = 1;
   let scale: MotionValue<number> | number = 1;
@@ -27,20 +35,22 @@ export const ParallaxScroll = ({
 
   switch (animationType) {
     case 'upFromBottom':
-      y = useTransform(scrollYProgress, [0, 1], [offset, -offset]);
-      opacity = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]);
+      y = yUp;
+      opacity = opacityUpDown;
       break;
     case 'downFromTop':
-      y = useTransform(scrollYProgress, [0, 1], [-offset, offset]);
-      opacity = useTransform(scrollYProgress, [0, 0.2, 1], [0, 1, 1]);
+      y = yDown;
+      opacity = opacityUpDown;
       break;
     case 'scaleIn':
-      scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 1]);
-      opacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 0.5, 1]);
+      scale = scaleTransform;
+      opacity = opacityScaleRotate;
       break;
     case 'rotateIn':
-      rotate = useTransform(scrollYProgress, [0, 0.5, 1], [20, 10, 0]);
-      opacity = useTransform(scrollYProgress, [0, 0.3, 1], [0, 0.5, 1]);
+      rotate = rotateTransform;
+      opacity = opacityScaleRotate;
+      break;
+    default:
       break;
   }
 

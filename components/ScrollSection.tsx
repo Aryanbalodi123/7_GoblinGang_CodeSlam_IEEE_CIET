@@ -9,7 +9,6 @@ interface ScrollSectionProps {
   animationType?: 'fadeInUp' | 'slideInLeft' | 'slideInRight' | 'zoomIn' | 'fadeInDown';
   delay?: number;
   duration?: number;
-  staggerChildren?: boolean;
 }
 
 const getAnimationVariants = (type: string) => {
@@ -52,7 +51,6 @@ export const ScrollSection = ({
   animationType = 'fadeInUp',
   delay = 0,
   duration = 0.8,
-  staggerChildren = false,
 }: ScrollSectionProps) => {
   const { ref, isInView } = useScrollAnimation({ threshold: 0.15 });
   const variants = getAnimationVariants(animationType);
