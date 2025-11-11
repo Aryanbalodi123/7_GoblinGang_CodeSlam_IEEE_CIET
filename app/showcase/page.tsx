@@ -7,23 +7,23 @@ import { ArrowLeft, Mail, Twitter, Facebook } from "lucide-react";
 
 // --- Data Definitions ---
 const colorData = [
-  { id: 1, name: "GLACIER WHITE SOLID", swatch: "/c1.png" },
+  { id: 1, name: "MIDNIGHT BLACK", swatch: "/c1.png" },
   { id: 2, name: "SAPPHIRE BLUE", swatch: "/c2.png" },
-  { id: 3, name: "MIDNIGHT BLACK", swatch: "/c3.png" },
-  { id: 4, name: "VOLCANO RED", swatch: "/c4.png" },
-  { id: 5, name: "QUICKSILVER", swatch: "/c5.png" },
-  { id: 6, name: "STORM GREY", swatch: "/c6.png" },
-  { id: 7, name: "RACING GREEN", swatch: "/c7.png" },
-  { id: 8, name: "SUNSET ORANGE", swatch: "/c8.png" },
-  { id: 9, name: "ROYAL INDIGO", swatch: "/c9.jpg" },
+  { id: 3, name: "RACING GREEN", swatch: "/c3.png" },
+  { id: 4, name: "BLACK SILVER", swatch: "/c4.png" },
+  { id: 5, name: "QUICK SILVER", swatch: "/c5.png" },
+  { id: 6, name: "STORM BLUE", swatch: "/c6.png" },
+  { id: 7, name: "VINTAGE RED", swatch: "/c7.png" },
+  { id: 8, name: "RACING RED", swatch: "/c8.png" },
+  { id: 9, name: "GLACIER WHITE SOLID", swatch: "/c9.jpg" },
 ];
 
 const wheelData = [
   { id: 1, name: "STANDARD BRIGHT SILVER", swatch: "/r1.jpg" },
   { id: 2, name: "SATIN GREY", swatch: "/r2.png" },
-  { id: 3, name: "GLOSS BLACK", swatch: "/r3.png" },
-  { id: 4, name: "DIAMOND CUT", swatch: "/r4.png" },
-  { id: 5, name: "TEN-SPOKE", swatch: "/r5.png" },
+  { id: 3, name: "DIAMOND CUT", swatch: "/r3.png" },
+  { id: 4, name: "DARK GREY", swatch: "/r4.png" },
+  { id: 5, name: "GLOSS BLACK", swatch: "/r5.png" },
 ];
 
 // --- Types ---
