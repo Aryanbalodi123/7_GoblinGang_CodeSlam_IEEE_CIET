@@ -80,8 +80,22 @@ const CAR_CONTENT = [
 
 export default function DrivingPage() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const handleScroll = () => {
       const scrollY = window.scrollY;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -98,26 +112,164 @@ export default function DrivingPage() {
 
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [currentIndex]);
+  }, [currentIndex, isMobile]);
 
   const currentContent = CAR_CONTENT[currentIndex];
 
   const handlePrev = () => {
     const newIndex = Math.max(0, currentIndex - 1);
     setCurrentIndex(newIndex);
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
-    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    if (!isMobile) {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
+      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }
   };
 
   const handleNext = () => {
     const newIndex = Math.min(CAR_IMAGES.length - 1, currentIndex + 1);
     setCurrentIndex(newIndex);
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
-    window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    if (!isMobile) {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
+      window.scrollTo({ top: targetScroll, behavior: "smooth" });
+    }
   };
 
+  // Mobile Layout
+  if (isMobile) {
+    return (
+      <div className="bg-white text-gray-800">
+        {/* Fixed Header */}
+        <nav className="fixed top-0 left-0 right-0 w-full px-4 sm:px-6 py-4 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-20">
+          <Link
+            href="/"
+            className="flex items-center text-lg sm:text-xl font-semibold text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            ← DRIVING
+          </Link>
+        </nav>
+
+        {/* Scrollable Content */}
+        <div className="pt-16">
+          <ContainerScroll className="h-[300vh]">
+            <div className="sticky left-0 top-16 h-[40vh] sm:h-[50vh] w-full flex items-center justify-center bg-gray-50">
+              <CardsContainer className="h-[280px] sm:h-[350px] w-[200px] sm:w-[250px]">
+                {CAR_IMAGES.map((imageUrl, index) => (
+                  <CardTransformed
+                    arrayLength={CAR_IMAGES.length}
+                    key={index}
+                    index={index + 2}
+                    variant="light"
+                    className="overflow-hidden !rounded-xl !p-0 shadow-2xl will-change-transform"
+                  >
+                    <Image
+                      src={imageUrl}
+                      alt={`Car view ${index + 1}`}
+                      fill
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                  </CardTransformed>
+                ))}
+              </CardsContainer>
+            </div>
+          </ContainerScroll>
+        </div>
+
+        {/* Fixed Bottom Content */}
+        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-20">
+          <div className="px-4 sm:px-6 py-4 sm:py-6 space-y-4 max-h-[45vh] overflow-y-auto">
+            {/* Left Content */}
+            <div className="space-y-3">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-300 transition-all duration-700">
+                {currentContent.leftTitle}
+              </h1>
+              <p className="text-xs sm:text-sm text-gray-500 leading-relaxed transition-all duration-700">
+                {currentContent.leftDescription}
+              </p>
+            </div>
+
+            {/* Right Content */}
+            <div className="space-y-3 border-t border-gray-200 pt-3">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800 transition-all duration-700">
+                {currentContent.rightTitle}
+              </h2>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div className="transition-all duration-700">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-300">
+                    {currentContent.specs.topSpeed}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                    KM/H<br />TOP SPEED
+                  </div>
+                </div>
+                <div className="transition-all duration-700">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-300">
+                    {currentContent.specs.acceleration}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                    SECONDS<br />(0-62 MPH)
+                  </div>
+                </div>
+                <div className="transition-all duration-700">
+                  <div className="text-2xl sm:text-3xl font-bold text-gray-300">
+                    {currentContent.specs.rpm}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-gray-400 mt-1">
+                    @ 7000 RPM
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-2 space-y-1 text-[10px] sm:text-xs text-gray-500 transition-all duration-700">
+                <div className="flex justify-between">
+                  <span>CAPACITY</span>
+                  <span className="text-gray-400">{currentContent.specs.capacity}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>POWER</span>
+                  <span className="text-gray-400">{currentContent.specs.power}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>TORQUE</span>
+                  <span className="text-gray-400">{currentContent.specs.torque}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>MAX REVOLUTIONS</span>
+                  <span className="text-gray-400">{currentContent.specs.maxRev}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigator */}
+            <div className="flex items-center justify-center gap-3 pt-2 pb-2">
+              <button
+                onClick={handlePrev}
+                disabled={currentIndex === 0}
+                className="w-9 h-9 sm:w-10 sm:h-10 border-2 border-gray-300 rounded flex items-center justify-center hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                ←
+              </button>
+              <span className="text-sm sm:text-base font-semibold text-gray-400">
+                {currentIndex + 1} / {CAR_IMAGES.length}
+              </span>
+              <button
+                onClick={handleNext}
+                disabled={currentIndex === CAR_IMAGES.length - 1}
+                className="w-9 h-9 sm:w-10 sm:h-10 border-2 border-gray-300 rounded flex items-center justify-center hover:bg-gray-800 hover:text-white hover:border-gray-800 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+              >
+                →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Desktop Layout
   return (
     <div className="relative bg-white text-gray-800">
       <div className="fixed inset-0 flex z-10 pointer-events-none">
@@ -254,4 +406,3 @@ export default function DrivingPage() {
     </div>
   );
 }
-            
