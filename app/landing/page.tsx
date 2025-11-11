@@ -3,7 +3,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X, ChevronRight } from 'lucide-react'; // Icons
 
@@ -100,35 +100,47 @@ function Navbar() {
 // (The black box from the right side of the image)
 
 const sidebarItems = [
-  'Introduction',
-  'Exterior',
-  'Driving',
-  'Interior',
-  'Wheels & Paint Finish',
+  { name: 'Introduction', id: 'introduction' },
+  { name: 'Exterior', id: 'exterior' },
+  { name: 'Driving', id: 'driving' },
+  { name: 'Interior', id: 'interior' },
+  { name: 'Showcase', id: 'showcase' },
 ];
 
 function NavigateSidebar() {
+  const handleScroll = (id: string) => {
+    console.log('Scrolling to:', id);
+    const element = document.getElementById(id);
+    console.log('Element found:', element);
+    if (element) {
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  };
+
   return (
     // Exact colors from image: black background, white/gray text
-    <div className="bg-black text-white p-8">
-      <h3 className="text-sm font-bold tracking-widest uppercase text-white mb-6">
+    <div className="bg-black text-white p-4">
+      <h3 className="text-xs font-bold tracking-widest uppercase text-white mb-3">
         Navigate
       </h3>
       <ul className="space-y-0">
         {sidebarItems.map((item) => (
-          <li key={item}>
-            <Link
-              href="#"
-              className="flex items-center justify-between py-4 border-b border-gray-700 group transition-all duration-300"
+          <li key={item.name}>
+            <button
+              type="button"
+              onClick={() => handleScroll(item.id)}
+              className="w-full flex items-center justify-between py-2 border-b border-gray-700 group transition-all duration-300 text-left hover:bg-gray-900 px-2 -mx-2"
             >
               <span className="text-xs font-medium tracking-wider uppercase text-gray-300 group-hover:text-white">
-                {item}
+                {item.name}
               </span>
               {/* Animation on the arrow */}
               <motion.span whileHover={{ x: 5 }} transition={{ type: 'spring', stiffness: 400 }}>
                 <ChevronRight size={16} className="text-gray-500 group-hover:text-white" />
               </motion.span>
-            </Link>
+            </button>
           </li>
         ))}
       </ul>
@@ -166,18 +178,18 @@ export default function HomePage() {
 
       <main className="grow">
         {/* --- CENTERED CAR IMAGE --- */}
-        <div className="container mx-auto px-8 lg:px-12 py-12">
+        <div id="introduction" className="container mx-auto px-8 lg:px-12 py-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="w-full max-w-5xl mx-auto"
+            className="w-full max-w-3xl mx-auto"
           >
             <Image
               src="/spyker.png" // <-- IMPORTANT: Make sure 'car.png' is in /public
               alt="Spyker C8 Aileron"
-              width={1200}
-              height={675}
+              width={800}
+              height={450}
               className="w-full h-auto"
               priority
             />
@@ -185,10 +197,10 @@ export default function HomePage() {
         </div>
 
         {/* --- HEADING + 3 COLUMN SECTION --- */}
-        <div className="container mx-auto px-8 lg:px-12 pb-16">
+        <div className="container mx-auto px-8 lg:px-12 pb-8">
           {/* Heading */}
           <motion.h1 
-            className="text-4xl font-bold tracking-tight text-gray-800 uppercase leading-tight mb-12"
+            className="text-3xl font-bold tracking-tight text-gray-800 uppercase leading-tight mb-6"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
@@ -198,14 +210,14 @@ export default function HomePage() {
 
           {/* 3 Column Layout: Para 1, Para 2, Navigate */}
           <motion.div
-            className="grid grid-cols-1 lg:grid-cols-3 gap-8"
+            className="grid grid-cols-1 lg:grid-cols-3 gap-4"
             variants={containerVariants}
             initial="hidden"
             animate="visible"
           >
             {/* Column 1: First Paragraph */}
             <motion.div 
-              className="text-sm text-gray-600 leading-relaxed"
+              className="text-xs text-gray-600 leading-relaxed"
               variants={itemVariants}
             >
               <p>
@@ -220,7 +232,7 @@ export default function HomePage() {
 
             {/* Column 2: Second Paragraph */}
             <motion.div 
-              className="text-sm text-gray-600 leading-relaxed"
+              className="text-xs text-gray-600 leading-relaxed"
               variants={itemVariants}
             >
               <p>
