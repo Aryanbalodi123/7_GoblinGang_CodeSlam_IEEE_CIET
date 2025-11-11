@@ -7,15 +7,31 @@ import Driving from "./driving/page";
 import Interior from "./interior/page";
 import Showcase from "./showcase/page";
 import Footer from "../components/blocks/Footer";
+import { ScrollAnimationWrapper } from "@/components/ScrollAnimationWrapper";
 
 export default function CombinedPage() {
   return (
-    <main>
-      <Landing />
-      <Exterior />
-      <Driving />
-      <Interior />
-      <Showcase />
+    <main className="scroll-smooth">
+      <ScrollAnimationWrapper direction="up" duration={0.8}>
+        <Landing />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper direction="up" duration={0.8} delay={0.1}>
+        <Exterior />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper direction="up" duration={0.8} delay={0.2}>
+        <Driving />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper direction="up" duration={0.8} delay={0.15}>
+        <Interior />
+      </ScrollAnimationWrapper>
+
+      <ScrollAnimationWrapper direction="up" duration={0.8} delay={0.2}>
+        <Showcase />
+      </ScrollAnimationWrapper>
+
       <Footer />
     </main>
   );
