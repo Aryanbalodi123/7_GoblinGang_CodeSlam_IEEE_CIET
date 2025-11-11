@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   CardTransformed,
   CardsContainer,
@@ -79,6 +79,7 @@ const CAR_CONTENT = [
 ];
 
 export default function DrivingPage() {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -97,9 +98,24 @@ export default function DrivingPage() {
     if (isMobile) return;
 
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const scrollPercentage = scrollY / maxScroll;
+      if (!sectionRef.current) return;
+
+      const sectionTop = sectionRef.current.offsetTop;
+      const sectionHeight = sectionRef.current.offsetHeight;
+
+      // The scroll range inside this section where the cards should animate
+      const start = sectionTop;
+      const end = sectionTop + Math.max(1, sectionHeight - window.innerHeight);
+
+      // If we're outside the section range, don't change the index
+      if (window.scrollY < start || window.scrollY > end) return;
+
+      const scrolled = Math.min(
+        Math.max(0, window.scrollY - start),
+        Math.max(1, sectionHeight - window.innerHeight)
+      );
+
+      const scrollPercentage = scrolled / Math.max(1, sectionHeight - window.innerHeight);
       const newIndex = Math.min(
         Math.max(0, Math.floor(scrollPercentage * CAR_IMAGES.length)),
         CAR_IMAGES.length - 1
@@ -119,9 +135,11 @@ export default function DrivingPage() {
   const handlePrev = () => {
     const newIndex = Math.max(0, currentIndex - 1);
     setCurrentIndex(newIndex);
-    if (!isMobile) {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
+    if (!isMobile && sectionRef.current) {
+      const sectionTop = sectionRef.current.offsetTop;
+      const sectionHeight = sectionRef.current.offsetHeight;
+      const range = Math.max(1, sectionHeight - window.innerHeight);
+      const targetScroll = sectionTop + (newIndex / Math.max(1, CAR_IMAGES.length - 1)) * range;
       window.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
   };
@@ -129,9 +147,11 @@ export default function DrivingPage() {
   const handleNext = () => {
     const newIndex = Math.min(CAR_IMAGES.length - 1, currentIndex + 1);
     setCurrentIndex(newIndex);
-    if (!isMobile) {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      const targetScroll = (newIndex / (CAR_IMAGES.length - 1)) * maxScroll;
+    if (!isMobile && sectionRef.current) {
+      const sectionTop = sectionRef.current.offsetTop;
+      const sectionHeight = sectionRef.current.offsetHeight;
+      const range = Math.max(1, sectionHeight - window.innerHeight);
+      const targetScroll = sectionTop + (newIndex / Math.max(1, CAR_IMAGES.length - 1)) * range;
       window.scrollTo({ top: targetScroll, behavior: "smooth" });
     }
   };
@@ -139,7 +159,7 @@ export default function DrivingPage() {
   // Mobile Layout
   if (isMobile) {
     return (
-      <div className="bg-white text-gray-800">
+      <div className="bg-white text-gray-800" ref={sectionRef}>
         {/* Fixed Header */}
         <nav className="fixed top-0 left-0 right-0 w-full px-4 sm:px-6 py-4 bg-white/90 backdrop-blur-sm border-b border-gray-200 z-20">
           <Link
@@ -271,10 +291,12 @@ export default function DrivingPage() {
 
   // Desktop Layout
   return (
-    <div className="relative bg-white text-gray-800">
-      <div className="fixed inset-0 flex z-10 pointer-events-none">
-        {/* Left Section - Text and Navigation */}
-        <div className="w-[30%] flex flex-col justify-between px-10 py-8 pointer-events-auto">
+    <div className="relative bg-white text-gray-800" ref={sectionRef}>
+      {/* Use relative + sticky columns instead of a page-level fixed overlay
+          so the text sections remain confined to this Driving section only. */}
+      <div className="relative flex z-10">
+        {/* Left Section - Text and Navigation (sticky within this section) */}
+        <div className="w-[30%] sticky top-0 h-screen flex flex-col justify-between px-10 py-8 pointer-events-auto">
           <Link
             href="/"
             className="flex items-center text-lg font-semibold text-gray-600 hover:text-gray-800 transition-colors"
@@ -312,11 +334,35 @@ export default function DrivingPage() {
           </div>
         </div>
 
-        {/* Center spacer */}
-        <div className="w-[40%]" />
+  {/* Center Section - Scrollable Cards (placed between the left and right sticky columns) */}
+  <div className="w-[40%] flex-shrink-0 flex items-center justify-center">
+    <ContainerScroll className="h-[400vh] w-full">
+      <div className="sticky left-0 top-0 h-screen w-full flex items-center justify-center">
+        <CardsContainer className="h-[450px] w-[320px]">
+          {CAR_IMAGES.map((imageUrl, index) => (
+            <CardTransformed
+              arrayLength={CAR_IMAGES.length}
+              key={index}
+              index={index + 2}
+              variant="light"
+              className="overflow-hidden !rounded-xl !p-0 shadow-2xl will-change-transform"
+            >
+              <Image
+                src={imageUrl}
+                alt={`Car view ${index + 1}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+            </CardTransformed>
+          ))}
+        </CardsContainer>
+      </div>
+    </ContainerScroll>
+  </div>
 
-        {/* Right Section - Specifications */}
-        <div className="w-[30%] flex flex-col justify-center px-10 py-8 space-y-8 pointer-events-auto">
+  {/* Right Section - Specifications (sticky within this section) */}
+  <div className="w-[30%] sticky top-0 h-screen flex flex-col justify-center px-10 py-8 space-y-8 pointer-events-auto">
           <h2 className="text-4xl font-bold text-gray-800 transition-all duration-700 ease-in-out">
             {currentContent.rightTitle}
           </h2>
@@ -379,30 +425,7 @@ export default function DrivingPage() {
         </div>
       </div>
 
-      {/* Center Section - Scrollable Cards */}
-      <ContainerScroll className="h-[400vh]">
-        <div className="sticky left-0 top-0 h-screen w-full flex items-center justify-center">
-          <CardsContainer className="h-[450px] w-[320px]">
-            {CAR_IMAGES.map((imageUrl, index) => (
-              <CardTransformed
-                arrayLength={CAR_IMAGES.length}
-                key={index}
-                index={index + 2}
-                variant="light"
-                className="overflow-hidden !rounded-xl !p-0 shadow-2xl will-change-transform"
-              >
-                <Image
-                  src={imageUrl}
-                  alt={`Car view ${index + 1}`}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                />
-              </CardTransformed>
-            ))}
-          </CardsContainer>
-        </div>
-      </ContainerScroll>
+      {/* center cards moved into the middle column */}
     </div>
   );
 }

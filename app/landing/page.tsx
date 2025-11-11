@@ -174,7 +174,7 @@ export default function HomePage() {
             className="w-full max-w-5xl mx-auto"
           >
             <Image
-              src="/car.png" // <-- IMPORTANT: Make sure 'car.png' is in /public
+              src="/spyker.png" // <-- IMPORTANT: Make sure 'car.png' is in /public
               alt="Spyker C8 Aileron"
               width={1200}
               height={675}
