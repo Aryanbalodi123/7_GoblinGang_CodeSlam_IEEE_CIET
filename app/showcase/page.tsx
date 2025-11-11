@@ -1,8 +1,15 @@
 "use client";
 
 import React, { useState } from "react";
+<<<<<<< HEAD
+import Image from "next/image";
+=======
 import { useRouter } from "next/navigation";
+>>>>>>> db2fc1aadf5bef91e227f89fcbab9513faab5e18
 import { motion, AnimatePresence } from "framer-motion";
+
+// Motion-wrapped Next Image for animated images
+const MotionImage = motion(Image);
 import { ArrowLeft, Mail, Twitter, Facebook } from "lucide-react";
 
 // --- Data Definitions ---
@@ -146,20 +153,18 @@ export default function ConfiguratorPage() {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <motion.img
+              {/** Motion-wrapped Next/Image for animated car with better optimization */}
+              <MotionImage
                 key={carImageSrc}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: isImageLoading ? 0 : 1, scale: 1 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
                 src={carImageSrc}
                 alt={`Car with ${currentColor.name} paint and ${currentWheel.name} wheels`}
-                className="w-full h-full object-contain"
-                onLoad={() => setIsImageLoading(false)}
-                onError={(e) => {
-                  setIsImageLoading(false);
-                  e.currentTarget.src = "/placeholder.jpg"; 
-                  e.currentTarget.alt = "Image not available";
-                }}
+                className="object-contain"
+                fill
+                onLoadingComplete={() => setIsImageLoading(false)}
+                onError={() => setIsImageLoading(false)}
               />
             </div>
           </div>
@@ -203,9 +208,11 @@ export default function ConfiguratorPage() {
                                   group`}
                       title={color.name}
                     >
-                      <img
+                      <Image
                         src={color.swatch}
                         alt={color.name}
+                        width={44}
+                        height={44}
                         className="w-full h-full object-cover rounded-full"
                       />
                       <AnimatePresence>
@@ -266,9 +273,11 @@ export default function ConfiguratorPage() {
                                   group bg-white`}
                       title={wheel.name}
                     >
-                      <img
+                      <Image
                         src={wheel.swatch}
                         alt={wheel.name}
+                        width={80}
+                        height={80}
                         className="w-full h-full object-contain p-1 rounded-full"
                       />
                       <AnimatePresence>

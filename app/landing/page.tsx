@@ -210,11 +210,11 @@ export default function HomePage() {
             >
               <p>
                 The all-new Spyker C8 Aileron marks the next step in Spyker
-                Cars' evolution. Inspired by the company's aviation heritage,
-                Spyker's second-generation sports car features cues from
+                Cars&apos; evolution. Inspired by the company&apos;s aviation heritage,
+                Spyker&apos;s second-generation sports car features cues from
                 second-generation aircraft propulsion, highlighting the
                 turbine blade, rather than the propeller which adorned many
-                elements of Spyker's first generation cars.
+                elements of Spyker&apos;s first generation cars.
               </p>
             </motion.div>
 
@@ -227,7 +227,7 @@ export default function HomePage() {
                 With sleek aerodynamics, a long GT wheelbase, luxurious and
                 spacious cabin and world-class six-speed automatic
                 transmission, the new C8 Aileron has broadened the appeal of
-                the Spyker brand while maintaining the marque's exclusivity.
+                the Spyker brand while maintaining the marque&apos;s exclusivity.
               </p>
             </motion.div>
 
